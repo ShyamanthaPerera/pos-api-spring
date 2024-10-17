@@ -1,8 +1,10 @@
 package com.example.posapispring.controller;
 
 import com.example.posapispring.customStatusCodes.ErrorStatus;
+import com.example.posapispring.dto.CustomerStatus;
 import com.example.posapispring.dto.impl.CustomerDTO;
 import com.example.posapispring.exceptions.CustomerNotFoundException;
+import com.example.posapispring.service.CustomerService;
 import com.example.posapispring.util.RegEX;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

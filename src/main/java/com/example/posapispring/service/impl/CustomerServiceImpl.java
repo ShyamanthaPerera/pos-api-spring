@@ -1,7 +1,15 @@
 package com.example.posapispring.service.impl;
 
+import com.example.posapispring.customStatusCodes.ErrorStatus;
 import com.example.posapispring.dao.CustomerDAO;
+import com.example.posapispring.dto.CustomerStatus;
+import com.example.posapispring.dto.impl.CustomerDTO;
+import com.example.posapispring.entity.impl.CustomerEntity;
+import com.example.posapispring.exceptions.CustomerNotFoundException;
+import com.example.posapispring.exceptions.DataPersistException;
 import com.example.posapispring.service.CustomerService;
+import com.example.posapispring.util.IDGeneraters;
+import com.example.posapispring.util.Mapping;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,7 +28,7 @@ public class CustomerServiceImpl implements CustomerService {
     private Mapping mapping;
     @Override
     public void saveCustomer(CustomerDTO customerDTO) {
-        customerDTO.setCustomerId(AppUtil.generateCustomerId());
+        customerDTO.setCustomerId(IDGeneraters.generateCustomerId());
         CustomerEntity saveCustomer = customerDao.save(mapping.toCustomerEntity(customerDTO));
         if(saveCustomer == null){
             throw new DataPersistException("Customer not saved");
@@ -61,7 +69,7 @@ public class CustomerServiceImpl implements CustomerService {
             CustomerEntity selectedCustomer = customerDao.getReferenceById(customerId);
             return mapping.toCustomerDto(selectedCustomer);
         }else {
-            return new SelectedCustomerAndItemAndOrderErrorStatus(2,"Customer ID With" +
+            return new ErrorStatus(2,"Customer ID With" +
                     customerId + "Not Found");
         }
     }
