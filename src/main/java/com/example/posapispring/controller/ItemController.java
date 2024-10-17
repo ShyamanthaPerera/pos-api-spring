@@ -1,5 +1,12 @@
 package com.example.posapispring.controller;
 
+import com.example.posapispring.customStatusCodes.ErrorStatus;
+import com.example.posapispring.dto.ItemStatus;
+import com.example.posapispring.dto.impl.ItemDTO;
+import com.example.posapispring.exceptions.DataPersistException;
+import com.example.posapispring.exceptions.ItemNotFoundException;
+import com.example.posapispring.service.ItemService;
+import com.example.posapispring.util.RegEX;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +25,7 @@ public class ItemController {
     @Autowired
     private ItemService itemService;
     private static Logger logger = LoggerFactory.getLogger(CustomerController.class);
+
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> saveItem(@RequestBody ItemDTO itemDTO){
@@ -37,7 +45,7 @@ public class ItemController {
     @DeleteMapping(value = "/{itemCode}")
     public ResponseEntity<Void> deleteItem(@PathVariable ("itemCode") String itemCode){
         try {
-            if(!RegEx.itemCodeMatcher(itemCode)){
+            if(!RegEX.itemCodeMatcher(itemCode)){
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
             itemService.deleteItem(itemCode);
@@ -56,7 +64,7 @@ public class ItemController {
                                            @RequestBody ItemDTO itemDTO){
 
         try {
-            if(!RegEx.itemCodeMatcher(itemCode) || itemDTO == null){
+            if(!RegEX.itemCodeMatcher(itemCode) || itemDTO == null){
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
             itemService.updateItem(itemCode,itemDTO);
@@ -77,9 +85,9 @@ public class ItemController {
 
     @GetMapping(value = "/{itemCode}",produces = MediaType.APPLICATION_JSON_VALUE)
     public ItemStatus getSelectedItem(@PathVariable ("itemCode") String itemCode){
-        if(!RegEx.itemCodeMatcher(itemCode)){
+        if(!RegEX.itemCodeMatcher(itemCode)){
             logger.error("Returning 400 Bad Request");
-            return new SelectedCustomerAndItemAndOrderErrorStatus(1,"Item Code Is Not Valid");
+            return new ErrorStatus(1,"Item Code Is Not Valid");
         }
         return itemService.getItem(itemCode);
     }
