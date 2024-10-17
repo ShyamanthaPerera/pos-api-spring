@@ -1,6 +1,10 @@
 package com.example.posapispring.controller;
 
 
+import com.example.posapispring.dto.impl.OrderDetailDTO;
+import com.example.posapispring.dto.impl.OrderRequestDTO;
+import com.example.posapispring.exceptions.DataPersistException;
+import com.example.posapispring.service.OrderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +23,7 @@ public class OrderController {
     @Autowired
     private OrderService orderService;
     private static Logger logger = LoggerFactory.getLogger(CustomerController.class);
+
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> placeOrder(@RequestBody OrderRequestDTO orderRequestDTO){
@@ -35,7 +40,7 @@ public class OrderController {
         }
     }
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<OrderDetailsDTO> getAllOrderDetails(){
+    public List<OrderDetailDTO> getAllOrderDetails(){
         return orderService.getAllDetails();
     }
 }
